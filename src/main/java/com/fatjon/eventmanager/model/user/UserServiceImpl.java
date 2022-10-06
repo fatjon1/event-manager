@@ -23,10 +23,10 @@ public class UserServiceImpl implements UserService{
     private final UserRepo userRepo;
     @Override
     public void saveUser(User user) throws UsernameExistsException, FieldCantBeNullException {
-        if (userRepo.findUserByUsername(user.getUsername()).isPresent()){
-            throw new UsernameExistsException("Username Exists!");
-        } else if (user.getUsername().isEmpty() || user.getFirstName().isEmpty()) {
+        if (user.getUsername().isEmpty() || user.getFirstName().isEmpty()) {
             throw new FieldCantBeNullException("Field cant be empty");
+        }else if (userRepo.findUserByUsername(user.getUsername()).isPresent()){
+            throw new UsernameExistsException("Username Exists!");
         }
         userRepo.save(user);
     }
@@ -79,6 +79,8 @@ public class UserServiceImpl implements UserService{
         user.orElseThrow(()->new UserNotFoundException("User not found"));
         return user;
     }
+
+
 
     // methods for PagingAndSortingRepository
 

@@ -23,7 +23,7 @@ import java.util.Set;
 @Data
 @Entity
 @SuperBuilder
-@Table(name = "event")
+@Table(name = "events")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +42,7 @@ public class Event {
   /*  @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id",nullable = false)
     private User createdBy;*/
-
+    @JsonIgnore
     @ManyToMany(mappedBy = "evente")
     private Set<User> pjesmares = new HashSet<>();
 }

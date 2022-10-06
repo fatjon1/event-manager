@@ -75,4 +75,12 @@ public class UserController {
         eventService.saveEvent(event);
         return new ResponseEntity<>("Event created!", HttpStatus.CREATED);
     }
+
+    @PutMapping("/users/{id}/event/new")
+    public ResponseEntity<?> participateToEvent(@PathVariable Long id, @RequestParam Long eventId) throws UserNotFoundException {
+        Optional<Event> event = eventService.getEventById(eventId);
+        Optional<User> user = userService.getUserById(id);
+        event.get().getPjesmares().add(user.get());
+        return ResponseEntity.ok().build();
+    }
 }

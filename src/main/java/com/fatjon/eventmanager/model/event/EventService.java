@@ -1,5 +1,7 @@
 package com.fatjon.eventmanager.model.event;
 
+import com.fatjon.eventmanager.exception.UserNotFoundException;
+
 import java.util.List;
 import java.util.Optional;
 

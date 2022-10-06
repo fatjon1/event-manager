@@ -36,7 +36,7 @@ public class User {
     private Collection<Role> roles = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_evente", joinColumns = @JoinColumn(name = "userId"),
+    @JoinTable(name = "users_events", joinColumns = @JoinColumn(name = "userId"),
     inverseJoinColumns = @JoinColumn(name = "eventId"))
     private Set<Event> evente = new HashSet<>();
 
