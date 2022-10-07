@@ -79,4 +79,5 @@ public class UserController {
         eventService.saveEvent(event);
         return new ResponseEntity<>("Event created!", HttpStatus.CREATED);
     }
+
 }
