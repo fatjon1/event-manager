@@ -1,6 +1,7 @@
 package com.fatjon.eventmanager.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fatjon.eventmanager.model.event.Event;
 import com.fatjon.eventmanager.model.role.Role;
 import lombok.AllArgsConstructor;
@@ -9,10 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,12 +33,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Collection<Role> roles = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_events", joinColumns = @JoinColumn(name = "userId"),
-    inverseJoinColumns = @JoinColumn(name = "eventId"))
-    private Set<Event> evente = new HashSet<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "pjesmares")
+    private List<Event> evente = new ArrayList<>();
 
-    /*@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
-    private Set<Event> event;*/
+    private Set<Event> event;
 }

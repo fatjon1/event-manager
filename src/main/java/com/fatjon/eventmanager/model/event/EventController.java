@@ -44,4 +44,13 @@ public class EventController {
         return new ResponseEntity<>(HttpStatus.OK.getReasonPhrase(),HttpStatus.OK);
     }
 
+    @PutMapping("/events/{id}/participate")
+    public ResponseEntity<?> participateToEvent(@PathVariable Long id, @RequestParam String username) throws UserNotFoundException {
+        Optional<Event> event = eventService.getEventById(id);
+        Optional<User> user = userService.findUserByUsername(username);
+        event.get().getPjesmares().add(user.get());
+        eventService.saveEvent(event.get());
+        return ResponseEntity.ok().body(event);
+    }
+
 }
