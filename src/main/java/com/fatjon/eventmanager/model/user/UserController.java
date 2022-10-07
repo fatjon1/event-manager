@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -28,6 +29,8 @@ public class UserController {
     private final UserService userService;
     private final EventService eventService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(){
         return ResponseEntity.ok().body(userService.getUsers());
@@ -43,6 +46,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<?> saveUser(@RequestBody User user) throws UserNotFoundException, UsernameExistsException, FieldCantBeNullException {
+        //encode password
         userService.saveUser(user);
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
@@ -71,7 +75,7 @@ public class UserController {
     @PostMapping("/users/{id}/event/new")
     public ResponseEntity<?> createEvent(@PathVariable Long id, @RequestBody Event event) throws UserNotFoundException {
         Optional<User> user = userService.getUserById(id);
-        //event.setCreatedBy(user.get());
+        event.setCreatedBy(user.get());
         eventService.saveEvent(event);
         return new ResponseEntity<>("Event created!", HttpStatus.CREATED);
     }

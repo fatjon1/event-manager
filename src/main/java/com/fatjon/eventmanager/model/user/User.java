@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,16 +28,15 @@ public class User {
     private String password;
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "userId"),
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "userId"),
             inverseJoinColumns = @JoinColumn(name = "roleId"))
     private Collection<Role> roles = new ArrayList<>();
+    @JsonIgnore
+    @ManyToMany(mappedBy = "pjesmares")
+    private List<Event> evente = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_evente", joinColumns = @JoinColumn(name = "userId"),
-    inverseJoinColumns = @JoinColumn(name = "eventId"))
-    private Set<Event> evente = new HashSet<>();
-
-    /*@JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
-    private Set<Event> event;*/
+    private Set<Event> event;
 }

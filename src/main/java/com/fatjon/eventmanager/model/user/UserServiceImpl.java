@@ -3,6 +3,8 @@ package com.fatjon.eventmanager.model.user;
 import com.fatjon.eventmanager.exception.FieldCantBeNullException;
 import com.fatjon.eventmanager.exception.UserNotFoundException;
 import com.fatjon.eventmanager.exception.UsernameExistsException;
+import com.fatjon.eventmanager.model.role.Role;
+import com.fatjon.eventmanager.model.role.RoleRepo;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +24,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
+
+    private final PasswordEncoder passwordEncoder;
     @Override
     public void saveUser(User user) throws UsernameExistsException, FieldCantBeNullException {
         if (userRepo.findUserByUsername(user.getUsername()).isPresent()){
@@ -28,6 +34,7 @@ public class UserServiceImpl implements UserService{
         } else if (user.getUsername().isEmpty() || user.getFirstName().isEmpty()) {
             throw new FieldCantBeNullException("Field cant be empty");
         }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepo.save(user);
     }
 
@@ -78,6 +85,13 @@ public class UserServiceImpl implements UserService{
         Optional<User> user = userRepo.findUserByUsername(username);
         user.orElseThrow(()->new UserNotFoundException("User not found"));
         return user;
+    }
+
+    @Override
+    public void addRoleToUser(String username, String roleName) {
+        Optional<User> user = userRepo.findUserByUsername(username);
+        Role role = roleRepo.findRoleByName(roleName);
+        user.get().getRoles().add(role);
     }
 
     // methods for PagingAndSortingRepository

@@ -20,6 +20,8 @@ public interface UserService {
 
     Optional<User> findUserByUsername(String username) throws UserNotFoundException;
 
+    void addRoleToUser(String username, String roleName);
+
 
    Page<User> getUsersPage(String username, int page, int size);
 

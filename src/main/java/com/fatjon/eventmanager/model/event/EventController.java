@@ -1,6 +1,8 @@
 package com.fatjon.eventmanager.model.event;
 
+import com.fatjon.eventmanager.exception.UserNotFoundException;
 import com.fatjon.eventmanager.model.user.User;
+import com.fatjon.eventmanager.model.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class EventController {
 
     public final EventService eventService;
+    private final UserService userService;
 
     @GetMapping("/events")
     public ResponseEntity<List<Event>> getAllEvents(){
@@ -42,9 +45,10 @@ public class EventController {
     }
 
     @PutMapping("/events/{id}/participate")
-    public ResponseEntity<?> participateToEvent(@PathVariable Long id, @RequestBody User user){
+    public ResponseEntity<?> participateToEvent(@PathVariable Long id, @RequestParam String username) throws UserNotFoundException {
         Event event = eventService.getEventById(id).get();
-        event.getPjesmares().add(user);
+        Optional<User> user = userService.findUserByUsername(username);
+        event.getPjesmares().add(user.get());
         eventService.updateEvent(id, event);
         return ResponseEntity.ok().body(event);
     }

@@ -15,9 +15,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -39,10 +38,11 @@ public class Event {
     private String title;
     private String description;
     private EventStatus eventStatus;
-  /*  @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id",nullable = false)
-    private User createdBy;*/
+    @ManyToOne
+    private User createdBy;
 
-    @ManyToMany(mappedBy = "evente")
-    private Set<User> pjesmares = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "users_evente", joinColumns = @JoinColumn(name = "eventId"),
+    inverseJoinColumns = @JoinColumn(name = "userId"))
+    private List<User> pjesmares = new ArrayList<>();
 }
