@@ -39,9 +39,9 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> getUserById(Long id) throws UserNotFoundException {
-      return Optional.ofNullable(userRepo.findById(id).orElseThrow(
-              () -> new UserNotFoundException("User with id "+id+" not found!")));
+    public User getUserById(Long id) throws UserNotFoundException {
+      return userRepo.findById(id).orElseThrow(
+              () -> new UserNotFoundException("User with id "+id+" not found!"));
     }
 
     @Override
@@ -92,7 +92,10 @@ public class UserServiceImpl implements UserService{
         Optional<User> user = userRepo.findUserByUsername(username);
         Role role = roleRepo.findRoleByName(roleName);
         user.get().getRoles().add(role);
+        userRepo.save(user.get());
     }
+
+
 
     // methods for PagingAndSortingRepository
 

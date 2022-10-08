@@ -29,7 +29,7 @@ public class MyUserDetails implements UserDetails {
         return user.getRoles()
                 .stream()
                 .map(role ->
-                new SimpleGrantedAuthority(role.toString())).collect(Collectors.toList());
+                new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
     @Override

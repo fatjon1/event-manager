@@ -1,5 +1,6 @@
 package com.fatjon.eventmanager.model.role;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fatjon.eventmanager.model.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,16 +19,17 @@ import java.util.Set;
 @Setter  // using @Data cause stackoverflow
 @Entity
 @Table(name = "role")
-public class Role implements GrantedAuthority {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "roleId")
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String name;
+    @JsonIgnore
     @ManyToMany(mappedBy = "roles")
     private Collection<User> users = new ArrayList<>();
 
-    @Override
-    public String getAuthority() {
-        return null;
-    }
+
 }

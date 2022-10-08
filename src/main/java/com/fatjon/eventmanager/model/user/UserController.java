@@ -5,7 +5,10 @@ import com.fatjon.eventmanager.exception.UserNotFoundException;
 import com.fatjon.eventmanager.exception.UsernameExistsException;
 import com.fatjon.eventmanager.model.event.Event;
 import com.fatjon.eventmanager.model.event.EventService;
+import com.fatjon.eventmanager.model.role.Role;
+import com.fatjon.eventmanager.model.role.RoleRepo;
 import com.fatjon.eventmanager.utils.HttpResponse;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +28,10 @@ import static org.springframework.http.HttpStatus.OK;
 @RequiredArgsConstructor
 public class UserController {
 
-    @Autowired
+
     private final UserService userService;
     private final EventService eventService;
-
-    private final PasswordEncoder passwordEncoder;
+    private final RoleRepo roleRepo;
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(){
@@ -39,8 +41,7 @@ public class UserController {
 
     @GetMapping("/users/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) throws UserNotFoundException {
-        Optional<User> user = userService.getUserById(id);
-            return ResponseEntity.ok().body(user);
+            return ResponseEntity.ok().body(userService.getUserById(id));
         }
 
 
@@ -74,10 +75,21 @@ public class UserController {
 
     @PostMapping("/users/{id}/event/new")
     public ResponseEntity<?> createEvent(@PathVariable Long id, @RequestBody Event event) throws UserNotFoundException {
-        Optional<User> user = userService.getUserById(id);
-        event.setCreatedBy(user.get());
+        User user = userService.getUserById(id);
+        event.setCreatedBy(user);
         eventService.saveEvent(event);
         return new ResponseEntity<>("Event created!", HttpStatus.CREATED);
     }
 
+    @PostMapping("/users/addrole")
+    public ResponseEntity<?> addRoleToUser(@RequestBody UserRoleForm form){
+        userService.addRoleToUser(form.getUsername(), form.getRoleName());
+        return ResponseEntity.ok().body("Role added!");
+    }
+
+}
+@Data
+class UserRoleForm{
+    private String username;
+    private String roleName;
 }
