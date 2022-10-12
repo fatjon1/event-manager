@@ -3,6 +3,7 @@ package com.fatjon.eventmanager.advice;
 import com.fatjon.eventmanager.exception.FieldCantBeNullException;
 import com.fatjon.eventmanager.exception.UserNotFoundException;
 import com.fatjon.eventmanager.exception.UsernameExistsException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -32,10 +33,20 @@ public class MyControllerAdvice {
         return new ResponseEntity<>(httpRequestMethodNotSupportedException.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> illegalArgumentException(IllegalArgumentException illegalArgumentException){
+        return new ResponseEntity<>(illegalArgumentException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     /*@ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<?>httpMessageNotReadableException(HttpMessageNotReadableException ex){
         return new ResponseEntity<>("JSON parse error: Invalid numeric value: Leading zeroes not allowed;",HttpStatus.BAD_REQUEST);
     }*/
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<?> malformedJwtException(MalformedJwtException malformedJwtException){
+        return ResponseEntity.badRequest().body("Jwt token is Malformed");
+    }
 
 
 

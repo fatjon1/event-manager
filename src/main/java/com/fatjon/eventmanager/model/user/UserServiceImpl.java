@@ -95,6 +95,10 @@ public class UserServiceImpl implements UserService{
         userRepo.save(user.get());
     }
 
+    @Override
+    public void deleteById(Long id) {
+        userRepo.deleteById(id);
+    }
 
 
     // methods for PagingAndSortingRepository

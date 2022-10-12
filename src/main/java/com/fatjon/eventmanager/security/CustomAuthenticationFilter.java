@@ -25,6 +25,9 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         // 2. delegate the authentication object to the manager
         // 3. get back the authentication from the manager
         // 4. if the object is authenticated then send request to the next filter in the chain
+
+
+
         filterChain.doFilter(request, response);
     }
 }

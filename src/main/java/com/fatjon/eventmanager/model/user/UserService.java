@@ -22,6 +22,8 @@ public interface UserService {
 
     void addRoleToUser(String username, String roleName);
 
+    void deleteById(Long id);
+
 
    Page<User> getUsersPage(String username, int page, int size);
 
